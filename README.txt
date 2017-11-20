@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------------
+-- 
+-- Arcade: Woodpecker for MiSTer by Sorgelig
+-- 21 November 2017
+-- 
+---------------------------------------------------------------------------------
+-- A simulation model of Pacman hardware
+-- Copyright (c) MikeJ - Feb 2007
+---------------------------------------------------------------------------------
+-- 
+-- Support screen and controls rotation on HDMI output.
+-- Only controls are rotated on VGA output.
+-- 
+-- 
+-- Keyboard inputs :
+--
+--   F1          : Coin + Start 1 player
+--   F2          : Coin + Start 2 players
+--   F5          : Skip the level
+--   SPACE,CTRL  : fire
+--   UP,DOWN,LEFT,RIGHT arrows : Movements
+--
+-- Joystick support.
+-- 
+---------------------------------------------------------------------------------
