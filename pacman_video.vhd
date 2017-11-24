@@ -63,6 +63,10 @@ entity PACMAN_VIDEO is
 		I_FLIP    : in  std_logic;
 		O_HBLANK  : out std_logic;
 		--
+		dn_addr   : in  std_logic_vector(15 downto 0);
+		dn_data   : in  std_logic_vector(7 downto 0);
+		dn_wr     : in  std_logic;
+		--
 		O_RED     : out std_logic_vector(2 downto 0);
 		O_GREEN   : out std_logic_vector(2 downto 0);
 		O_BLUE    : out std_logic_vector(1 downto 0);
@@ -115,7 +119,11 @@ architecture RTL of PACMAN_VIDEO is
 	signal video_op_sel       : std_logic;
 	signal final_col          : std_logic_vector(3 downto 0);
 
+	signal gfx_cs             : std_logic;
+
 begin
+
+gfx_cs  <= '1' when dn_addr(15 downto 14) = "10" else '0';
 
 dr <= not sprite_xy when I_HBLANK = '1' else "11111111"; -- pull ups on board
 
@@ -156,17 +164,22 @@ ca(11 downto 6) <= sprite_data(7 downto 2);
 ca(5) <= sprite_data(1) when char_hblank_reg = '0' else char_sum_reg(3) xor xflip;
 ca(4) <= sprite_data(0) when char_hblank_reg = '0' else I_HCNT(3);
 ca(3) <= I_HCNT(2)       xor yflip;
-ca(2) <= char_sum_reg(2) xor xflip;
+ca(2) <= char_sum_reg(0) xor xflip;
 ca(1) <= char_sum_reg(1) xor xflip;
-ca(0) <= char_sum_reg(0) xor xflip;
+ca(0) <= char_sum_reg(2) xor xflip;
 
 -- char roms
-char_rom_5ef : entity work.GFX1
+char_rom_5ef : work.dpram generic map (13,8)
 port map
 (
-	CLK         => CLK,
-	ADDR        => ca,
-	DATA        => char_rom_5ef_buf
+	clock_a   => clk,
+	wren_a    => dn_wr and gfx_cs,
+	address_a => dn_addr(12 downto 0),
+	data_a    => dn_data,
+
+	clock_b   => clk,
+	address_b => ca,
+	q_b       => char_rom_5ef_buf
 );
 
 p_char_shift : process
@@ -183,7 +196,7 @@ begin
 			when "10" =>	shift_regu <= shift_regu(2 downto 0) & '0';
 								shift_regl <= shift_regl(2 downto 0) & '0';
 
-			when "11" =>	shift_regu <= char_rom_5ef_buf(7 downto 4); -- load
+			when "11" =>	shift_regu <= char_rom_5ef_buf(7) & char_rom_5ef_buf(4) & char_rom_5ef_buf(5) & char_rom_5ef_buf(6);
 								shift_regl <= char_rom_5ef_buf(3 downto 0);
 			when others => null;
 		end case;
