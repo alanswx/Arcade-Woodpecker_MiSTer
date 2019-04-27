@@ -1,7 +1,8 @@
 @echo off
 
 set    zip=woodpeck.zip
-set ifiles=f.bin+f.bin+f.bin+f.bin+i.bin+e.bin+g.bin+h.bin+a.5e+c.5h+b.5f+d.5j
+set ifiles=f.bin+f.bin+f.bin+f.bin+i.bin+e.bin+g.bin+h.bin+a.5e+c.5h+b.5f+d.5j+d.5j+a.5e+c.5h+b.5f+d.5j+d.5j+pr.1k+pr.4a+pr.3k+pr.8h
+
 set  ofile=a.wdpckr.rom
 
 rem =====================================
